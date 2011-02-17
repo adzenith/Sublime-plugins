@@ -1,7 +1,7 @@
 import sublime, sublime_plugin
 
-VERTICAL_GAP = 8
-HORIZONTAL_GAP = 20
+VERTICAL_OFFSET = 8
+HORIZONTAL_OFFSET = 20
 
 def num_visible_rows_in_view(view):
   vr = view.visible_region()
@@ -9,7 +9,7 @@ def num_visible_rows_in_view(view):
   last_visible_row = view.rowcol(vr.end())[0]
   return last_visible_row - first_visible_row + 1
 
-class MarginRespectingCaret(sublime_plugin.EventListener):
+class ScrollOffset(sublime_plugin.EventListener):
   def on_selection_modified(self, view):
     first_caret_row = float("inf")
     last_caret_row = -1
@@ -38,7 +38,7 @@ class MarginRespectingCaret(sublime_plugin.EventListener):
     num_necessary_cols = rightmost_caret_rowcol[1] - leftmost_caret_rowcol[1] + 1
     # if num_necessary_cols >= num
     
-    gap = min(VERTICAL_GAP, (num_visible_rows - num_necessary_rows) / 2)
+    gap = min(VERTICAL_OFFSET, (num_visible_rows - num_necessary_rows) / 2)
     last_desired_row = last_caret_row + gap
     if last_desired_row > num_rows_in_buffer:
       last_desired_row = num_rows_in_buffer
@@ -52,8 +52,8 @@ class MarginRespectingCaret(sublime_plugin.EventListener):
     
     bottom_desired_pos = view.text_point(last_desired_row, 0)
     top_desired_pos = view.text_point(first_desired_row, 0)
-    left_desired_pos = max(view.text_point(*leftmost_caret_rowcol) - HORIZONTAL_GAP,view.line(view.text_point(*leftmost_caret_rowcol)).begin())
-    right_desired_pos = min(view.text_point(*rightmost_caret_rowcol) + HORIZONTAL_GAP,view.line(view.text_point(*rightmost_caret_rowcol)).end())
+    left_desired_pos = max(view.text_point(*leftmost_caret_rowcol) - HORIZONTAL_OFFSET,view.line(view.text_point(*leftmost_caret_rowcol)).begin())
+    right_desired_pos = min(view.text_point(*rightmost_caret_rowcol) + HORIZONTAL_OFFSET,view.line(view.text_point(*rightmost_caret_rowcol)).end())
     
     #position vertically
     view.show(sublime.Region(top_desired_pos, bottom_desired_pos), False)
