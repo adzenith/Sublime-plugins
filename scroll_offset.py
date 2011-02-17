@@ -1,4 +1,5 @@
-import sublime, sublime_plugin
+import sublime
+import sublime_plugin
 
 VERTICAL_OFFSET = 8
 HORIZONTAL_OFFSET = 20
@@ -64,45 +65,3 @@ class ScrollOffset(sublime_plugin.EventListener):
                               sublime.Region(*([left_desired_pos]*2)),
                               sublime.Region(*([right_desired_pos]*2))],
                               "comment", sublime.DRAW_EMPTY)
-
-
-def select(view, region):
-  sel_set = view.sel()
-  sel_set.clear()
-  sel_set.add(region)
-  view.show(region, True)
-
-def onDone_find_definition_input(search_string):
-  v = sublime.active_window().active_view()
-  results = v.find_all(search_string)
-  for r in results:
-    if v.syntax_name(r.begin()).startswith("entity.name.function"):
-      print ':', v,r
-      select(v, r)
-      pass
-
-class FindDefinitionCommand(sublime_plugin.TextCommand):
-  def run(self, edit):
-    view = sublime.active_window().active_view()
-    default_text = ""
-    if len(view.sel()) == 1:
-      default_text = view.substr(view.word(view.sel()[0]))
-    panel_view = sublime.active_window().show_input_panel("Definition of:",default_text,onDone_find_definition_input,0,0)
-
-
-import datetime
-
-class InsertTimestampCommand(sublime_plugin.TextCommand):
-  def run(self, edit):
-    #generate the timestamp
-    timestamp_str = datetime.datetime.now().isoformat(' ')
-
-    #for region in the selection
-    #(i.e. if you have multiple regions selected,
-    # insert the timestamp in all of them)
-    for r in self.view.sel():
-      #put in the timestamp
-      #(if text is selected, it'll be
-      # replaced in an intuitive fashion)
-      self.view.erase(edit, r)
-      self.view.insert(edit, r.begin(), timestamp_str)
