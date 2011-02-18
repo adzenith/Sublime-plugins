@@ -52,7 +52,13 @@ class FoldCommand(sublime_plugin.TextCommand):
   def run(self, edit):
     for s in self.view.sel():
       if len(s):
-        fold_region(self.view, edit, s)
+        #check if we've already folded this string before
+        substring = self.view.substr(s)
+        try:
+          n = folds.index(substring)
+        except:
+          n = None
+        fold_region(self.view, edit, s, n)
 
 class UnfoldCommand(sublime_plugin.TextCommand):
   def run(self, edit):
