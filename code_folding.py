@@ -87,11 +87,18 @@ class FoldListener(sublime_plugin.EventListener):
   numbers = []
   visible_region = None
   def on_pre_save(self, view):
-    self.key_regions, self.numbers = find_key_regions(view)
     self.visible_region = view.visible_region()
+    self.key_regions = []
+    self.numbers = []
     try:
       edit = view.begin_edit()
-      unfold(view, edit, [sublime.Region(0,len(view))])
+      while True:
+        kr, n = find_key_regions(view)
+        if not len(kr):
+          break
+        self.key_regions = kr + self.key_regions
+        self.numbers = n + self.numbers
+        unfold(view, edit, [sublime.Region(0,len(view))])
     finally:
       view.end_edit(edit)
   
