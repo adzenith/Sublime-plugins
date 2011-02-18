@@ -1,3 +1,21 @@
+"""
+Add these commands to your user keymap file:
+  { "keys": ["super+k"], "command": "fold"},
+  { "keys": ["shift+super+k"], "command": "unfold"}
+
+HOW TO USE
+Select some text, hit super+k, and it'll get folded into a fold indicator
+like this one: [--[#]--] . It works with multiple selections too.
+Put your cursor in a fold indicator (or select a bunch of them at once!) and
+hit shift+super+k to unfold them.
+
+WARNING
+The form of the fold indicator is important -- you can feel free to move it
+around, make multiple copies, etc., but if you change it at all it won't unfold
+correctly. If you make a mistake, just change it back and it'll work.
+"""
+
+
 import sublime
 import sublime_plugin
 import re
