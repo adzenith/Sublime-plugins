@@ -20,20 +20,23 @@ import sublime
 import sublime_plugin
 import re
 
-skip_next_modified_check = False
-
 def show_view_as_clean(view):
+  if view.is_scratch():
+    return
   global skip_next_modified_check
   view.set_scratch(True)
-  skip_next_modified_check = True
+  view.settings().set("cleanliness",True)
 
 class CleanlinessListener(sublime_plugin.EventListener):
   def on_modified(self,view):
     global skip_next_modified_check
-    if skip_next_modified_check:
-      skip_next_modified_check = False
+    if view.settings().get("cleanliness") == True:
+      view.settings().set("cleanliness",False)
       return
-    view.set_scratch(False)
+    elif view.settings().get("cleanliness") == False:
+      view.set_scratch(False)
+    #else cleanliness is None:
+    #  pass
 
 folds = []
 
