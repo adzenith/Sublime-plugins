@@ -49,6 +49,8 @@ class ScrollOffset(sublime_plugin.EventListener):
     horizontal_offset = abs(int(settings.get("scroll_offset_horizontal") or 0))
     if not any((vertical_offset, horizontal_offset)):
       return
+    if len(view.sel()) == 0:
+      return
     
     show_guides = bool(settings.get("scroll_offset_guides"))
     
