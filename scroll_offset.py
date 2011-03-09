@@ -43,6 +43,9 @@ def find_selection_limits(view):
 	return first_caret_row, last_caret_row, leftmost_caret_rowcol, rightmost_caret_rowcol
 
 class ScrollOffset(sublime_plugin.EventListener):
+	def on_activated(self,view):
+		self.on_selection_modified(view)
+	
 	def on_selection_modified(self, view):
 		settings = view.settings()
 		vertical_offset = abs(int(settings.get("scroll_offset_vertical") or 0))
